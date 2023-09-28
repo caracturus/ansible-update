@@ -1,7 +1,10 @@
+---
 - hosts: all
-  become: yes
+
+  become: true
+
   tasks:
-    - name: apt
+    - name: APT Package Updater
       apt:
         update_cache: yes
-        upgrade: 'yes'
+        upgrade: yes
