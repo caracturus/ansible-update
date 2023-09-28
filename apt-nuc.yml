@@ -72,4 +72,12 @@
     msg: "The SSH port is neither 22 or {{ ansible_port }}."
   when: ssh_port_set is undefined
 
+- hosts: all
 
+  become: true
+
+  tasks:
+    - name: APT Package Updater
+      apt:
+        update_cache: yes
+        upgrade: yes
