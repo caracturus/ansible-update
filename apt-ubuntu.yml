@@ -1,19 +1,8 @@
 - hosts: all
   become: true
   become_method: sudo
-  tasks:
-    - name: Remove apt lock file
-      file:
-        state: absent
-        path: "/var/lib/dpkg/lock"
-          
-    - name: Update APT Cache
-      apt:
-        update_cache: yes
-        force_apt_get: yes
-    
+  tasks:  
     - name: Upgrade all packages to the latest version
       apt:
         name: "*"
         state: latest
-        force_apt_get: 'yes'
