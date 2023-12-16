@@ -1,4 +1,5 @@
-- hosts: "nuc"
+- hosts: 127.0.0.1
+  connection: local
   become: yes
   tasks:
     - name: apt
