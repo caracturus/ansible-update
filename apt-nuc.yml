@@ -1,5 +1,5 @@
 - hosts: "mylocalhost"
-  ansible_user: caracturus
+  become_user: caracturus
   become: yes
   tasks:
     - name: apt
