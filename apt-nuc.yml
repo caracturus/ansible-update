@@ -1,5 +1,4 @@
 - hosts: "mylocalhost"
-  become_user: caracturus
   become: yes
   tasks:
     - name: apt
