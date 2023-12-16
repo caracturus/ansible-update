@@ -1,6 +1,5 @@
 - hosts: "mylocalhost"
   become: yes
-  become_method: su
   tasks:
     - name: apt
       apt:
