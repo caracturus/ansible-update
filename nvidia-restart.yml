@@ -1,0 +1,11 @@
+- hosts: "plex"
+  become: yes
+  tasks:
+    - name: Restart Nvidia Driver
+      ansible.builtin.shell:
+        nvidia-smi && sudo rmmod nvidia_uvm nvidia_drm nvidia_modeset nvidia && nvidia-smi
+      register: nvidia_restart
+
+    - name: Display output
+      ansible.builtin.debug:
+        var: nvidia_restart.stdout_lines
