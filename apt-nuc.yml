@@ -5,11 +5,7 @@
   connection: local
   become: yes
   tasks:
-    - name: run apt-get update upgrade
-      ansible.builtin.shell:
-        apt-get update && apt-get upgrade -y
-      register: nuc_update
-
-    - name: Display output
-      ansible.builtin.debug:
-        var: nuc_update.stdout_lines
+    - name: APT Package Updater
+      apt:
+        update_cache: yes
+        upgrade: yes
