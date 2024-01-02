@@ -1,4 +1,5 @@
 - hosts: "mylocalhost"
+  become: true
   tasks:
     - name: apt
       apt:
