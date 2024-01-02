@@ -5,7 +5,7 @@
   tasks:
     - name: run apt-get update upgrade
       ansible.builtin.shell:
-        sudo apt-get update && sudo apt-get upgrade -y
+        apt-get update && apt-get upgrade -y
       register: nuc_update
 
     - name: Display output
