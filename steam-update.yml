@@ -1,0 +1,10 @@
+- hosts: "nuc"
+  tasks:
+    - name: Update Steam Lancache Prefill
+      ansible.builtin.shell:
+        docker run -it --rm --net=host --volume ~/.config/steam-prefill:/Config tpill90/steam-lancache-prefill:latest   prefill
+      register: steam_update
+
+    - name: Display output
+      ansible.builtin.debug:
+        var: steam_update.stdout_lines
