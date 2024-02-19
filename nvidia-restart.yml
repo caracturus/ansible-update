@@ -9,3 +9,7 @@
     - name: Display output
       ansible.builtin.debug:
         var: nvidia_restart.stdout_lines
+
+    - name: Restart machine if failure
+      reboot:
+      when: "'Unable to determine the device handle for' in nvidia_restart.stdout_lines"
