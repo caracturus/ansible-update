@@ -1,0 +1,11 @@
+- hosts: "ubuntu"
+  become: yes
+  tasks:
+    - name: Purge Docker Images
+      ansible.builtin.shell:
+        docker image prune -f
+      register: image_prune
+
+    - name: Display output
+      ansible.builtin.debug:
+        var: image_prune.stdout_lines
