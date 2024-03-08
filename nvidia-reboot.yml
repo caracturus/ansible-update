@@ -1,0 +1,11 @@
+- hosts: "plex"
+  become: yes
+  tasks:
+    - name: Restart Nvidia Driver
+      ansible.builtin.shell:
+        nvidia-smi
+      register: nvidia_restart
+
+    - name: Restart machine if No devices were found
+      reboot:
+      when: "'No devices were found' in nvidia_restart.stdout_lines"
