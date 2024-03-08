@@ -3,4 +3,9 @@
   tasks:
     - name: Check nvidia driver, if not OK, then reboot
       ansible.builtin.shell:
-        /home/caradoc/nvidia-reboot.sh && nvidia-smi
+        /home/caradoc/nvidia-reboot.sh
+      register: nvidia_reboot
+
+    - name: Display output
+      ansible.builtin.debug:
+        var: nvidia_reboot.stdout_lines
