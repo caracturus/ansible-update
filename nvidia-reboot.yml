@@ -1,11 +1,6 @@
 - hosts: "plex"
   become: yes
   tasks:
-    - name: Restart Nvidia Driver
+    - name: Check nvidia driver, if not OK, then reboot
       ansible.builtin.shell:
-        nvidia-smi
-      register: nvidia_restart
-
-    - name: Restart machine if No devices were found
-      reboot:
-      when: "'No devices were found' in nvidia_restart.stdout_lines"
+        /home/caradoc/nvidia-reboot.sh
