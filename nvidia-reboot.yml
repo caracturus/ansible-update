@@ -1,7 +1,7 @@
 - hosts: "plex"
   become: yes
   tasks:
-    - name: Check nvidia driver, if not OK, then reboot
+    - name: Check nvidia driver, if not OK, then reinstall
       ansible.builtin.shell:
         /home/caradoc/nvidia-reboot.sh
       register: nvidia_reboot
