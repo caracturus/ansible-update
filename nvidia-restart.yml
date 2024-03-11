@@ -1,19 +1,19 @@
 - hosts: "plex"
   become: yes
   tasks:
-    - name: Restart Nvidia Driver
-      ansible.builtin.shell:
-        nvidia-smi && sudo rmmod nvidia_uvm nvidia_drm nvidia_modeset nvidia && nvidia-smi
-      register: nvidia_restart
+#    - name: Restart Nvidia Driver
+#     ansible.builtin.shell:
+#        nvidia-smi && sudo rmmod nvidia_uvm nvidia_drm nvidia_modeset nvidia && nvidia-smi
+#      register: nvidia_restart
 
-    - name: Display output
-      ansible.builtin.debug:
-        var: nvidia_restart.stdout_lines
+#    - name: Display output
+#      ansible.builtin.debug:
+#        var: nvidia_restart.stdout_lines
 
-    - name: Restart machine if failure
-      reboot:
-      when: "'Unable to determine the device handle for' in nvidia_restart.stdout_lines"
+#    - name: Restart machine if failure
+#      reboot:
+#      when: "'Unable to determine the device handle for' in nvidia_restart.stdout_lines"
 
-    - name: Restart machine if No devices were found
-      reboot:
-      when: "'No devices were found' in nvidia_restart.stdout_lines"
+#    - name: Restart machine if No devices were found
+#      reboot:
+#      when: "'No devices were found' in nvidia_restart.stdout_lines"
