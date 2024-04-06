@@ -3,9 +3,9 @@
   tasks:
     - name: Check Nvidia Driver
       ansible.builtin.shell:
-        nvidia-smi
-      register: nvidia_restart
+        nvidiasmi.sh
+      register: nvidia_smi
 
     - name: Display output
       ansible.builtin.debug:
-        var: nvidia_restart.stdout_lines
+        var: nvidia_smi.stdout_lines
