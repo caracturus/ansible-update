@@ -3,7 +3,7 @@
   tasks:
     - name: Check Nvidia Driver
       ansible.builtin.shell:
-        nvidiasmi.sh
+        /home/caradoc/nvidiasmi.sh
       register: nvidia_smi
 
     - name: Display output
