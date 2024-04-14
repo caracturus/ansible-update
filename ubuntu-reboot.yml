@@ -1,1 +1,17 @@
+- hosts: "ubuntu"
+  become: yes
+  tasks:
+    - name: Check whether reboot required
+      ansible.builtin.shell:
+         if [ -f /var/run/reboot-required ]; then
+             echo "System needs reboot. Rebooting..."
+             sudo reboot
+         else
+             echo "System does not need reboot."
+         fi
 
+      register: image_prune
+
+    - name: Display output
+      ansible.builtin.debug:
+        var: image_prune.stdout_lines
