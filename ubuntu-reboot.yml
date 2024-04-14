@@ -1,16 +1,21 @@
-- hosts: "ubuntu"
+---
+- name: Check if system needs reboot and reboot if required
+  hosts: "ubuntu"
   become: yes
   tasks:
-    - name: Check whether reboot required
-      ansible.builtin.shell:
-         if [ -f /var/run/reboot-required ]; then
-             echo "System needs reboot. Rebooting..."
-             sudo reboot
-         else
-             echo "System does not need reboot."
-         fi
-      register: system_reboot
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
 
-    - name: Display output
-      ansible.builtin.debug:
-        var: system_reboot.stdout_lines
+    - name: Reboot if required
+      command: "/sbin/reboot"
+      async: 0
+      poll: 0
+      become: true
+      when: reboot_required.stat.exists
+
+    - name: Print message if no reboot required
+      debug:
+        msg: "System does not need reboot."
+      when: not reboot_required.stat.exists
