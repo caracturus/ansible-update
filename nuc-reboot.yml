@@ -1,0 +1,21 @@
+---
+- name: Check if system needs reboot and reboot if required
+  hosts: "nuc"
+  become: yes
+  tasks:
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot if required
+      command: "/sbin/reboot"
+      async: 0
+      poll: 0
+      become: true
+      when: reboot_required.stat.exists
+
+    - name: Print message if no reboot required
+      debug:
+        msg: "System does not need reboot."
+      when: not reboot_required.stat.exists
