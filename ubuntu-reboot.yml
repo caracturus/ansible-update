@@ -9,9 +9,8 @@
          else
              echo "System does not need reboot."
          fi
-
-      register: image_prune
+      register: system_reboot
 
     - name: Display output
       ansible.builtin.debug:
-        var: image_prune.stdout_lines
+        var: system_reboot.stdout_lines
