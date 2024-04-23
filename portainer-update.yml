@@ -1,1 +1,11 @@
+- hosts: "ubuntu"
+  become: yes
+  tasks:
+    - name: Update Portainer
+      ansible.builtin.shell:
+        /home/caradoc/portainerupdate.sh
+      register: portainerupdate
 
+    - name: Display output
+      ansible.builtin.debug:
+        var: portainerupdate.stdout_lines
