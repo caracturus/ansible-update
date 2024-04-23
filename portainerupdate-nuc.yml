@@ -3,7 +3,7 @@
   tasks:
     - name: Update Portainer
       ansible.builtin.shell:
-        /home/caradoc/portainerupdate.sh
+        /home/caracturus/portainerupdate.sh
       register: portainerupdate
 
     - name: Display output
