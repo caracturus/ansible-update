@@ -1,5 +1,4 @@
-# playbook.yml
-- name: Full Ubuntu 24.10 Server Maintenance with NVIDIA & Portainer
+- name: Full Ubuntu 24.10 Server Maintenance
   hosts: all
   become: true
   tasks:
@@ -35,10 +34,12 @@
           - /var/run/docker.sock:/var/run/docker.sock
           - portainer_data:/data
 
+    # NVIDIA Tasks — only for 'plex'
     - name: Check if NVIDIA driver is working (nvidia-smi)
       command: nvidia-smi
       register: nvidia_smi_output
       ignore_errors: yes
+      when: inventory_hostname == "plex"
 
     - name: Blacklist nouveau if NVIDIA driver reinstall is needed
       copy:
@@ -46,18 +47,25 @@
         content: |
           blacklist nouveau
           options nouveau modeset=0
-      when: nvidia_smi_output.rc != 0
+      when:
+        - inventory_hostname == "plex"
+        - nvidia_smi_output is defined and nvidia_smi_output.rc != 0
 
     - name: Regenerate initramfs
       command: update-initramfs -u
-      when: nvidia_smi_output.rc != 0
+      when:
+        - inventory_hostname == "plex"
+        - nvidia_smi_output is defined and nvidia_smi_output.rc != 0
 
     - name: Reinstall NVIDIA driver silently
       shell: sh /opt/nvidia/NVIDIA-Linux-x86_64-570.133.07.run -s --no-drm --no-opengl-files --install-libglvnd
       args:
         creates: /usr/bin/nvidia-smi
-      when: nvidia_smi_output.rc != 0
+      when:
+        - inventory_hostname == "plex"
+        - nvidia_smi_output is defined and nvidia_smi_output.rc != 0
 
+    # Reboot check (applies to all hosts)
     - name: Check if reboot is required
       stat:
         path: /var/run/reboot-required
