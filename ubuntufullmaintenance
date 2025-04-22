@@ -1,0 +1,77 @@
+# playbook.yml
+- name: Full Ubuntu 24.10 Server Maintenance with NVIDIA & Portainer
+  hosts: all
+  become: true
+  tasks:
+
+    - name: Update apt repositories
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: full
+        autoremove: yes
+
+    - name: Dist upgrade (just in case)
+      apt:
+        upgrade: dist
+
+    - name: Pull latest Portainer image
+      docker_image:
+        name: portainer/portainer-ce
+        source: pull
+
+    - name: Recreate Portainer container
+      docker_container:
+        name: portainer
+        image: portainer/portainer-ce
+        state: started
+        restart: true
+        recreate: true
+        ports:
+          - "9000:9000"
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - portainer_data:/data
+
+    - name: Check if NVIDIA driver is working (nvidia-smi)
+      command: nvidia-smi
+      register: nvidia_smi_output
+      ignore_errors: yes
+
+    - name: Blacklist nouveau if NVIDIA driver reinstall is needed
+      copy:
+        dest: /etc/modprobe.d/blacklist-nouveau.conf
+        content: |
+          blacklist nouveau
+          options nouveau modeset=0
+      when: nvidia_smi_output.rc != 0
+
+    - name: Regenerate initramfs
+      command: update-initramfs -u
+      when: nvidia_smi_output.rc != 0
+
+    - name: Reinstall NVIDIA driver silently
+      shell: sh /opt/nvidia/NVIDIA-Linux-x86_64-570.133.07.run -s --no-drm --no-opengl-files --install-libglvnd
+      args:
+        creates: /usr/bin/nvidia-smi
+      when: nvidia_smi_output.rc != 0
+
+    - name: Check if reboot is required
+      stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot the system if required
+      reboot:
+        reboot_timeout: 600
+        pre_reboot_delay: 5
+        post_reboot_delay: 30
+        test_command: whoami
+      when: reboot_required.stat.exists
+
+    - name: Notify reboot complete
+      debug:
+        msg: "✅ Reboot completed successfully."
+      when: reboot_required.stat.exists
