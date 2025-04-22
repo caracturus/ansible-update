@@ -19,7 +19,7 @@
     # ---- Portainer Smart Update Logic ----
 
     - name: Get running container image ID
-      command: docker inspect --format='{{.Image}}' {{ portainer_container_name }}
+      command: docker inspect --format='{{ Image }}' {{ portainer_container_name }}
       register: running_image_id
       failed_when: false
       changed_when: false
