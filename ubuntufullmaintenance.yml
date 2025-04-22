@@ -65,6 +65,12 @@
         - inventory_hostname == "plex"
         - nvidia_smi_output is defined and nvidia_smi_output.rc != 0
 
+    - name: Regenerate initramfs
+      command: update-initramfs -u
+      when:
+        - inventory_hostname == "plex"
+        - nvidia_smi_output is defined and nvidia_smi_output.rc != 0
+
     # Reboot check (applies to all hosts)
     - name: Check if reboot is required
       stat:
