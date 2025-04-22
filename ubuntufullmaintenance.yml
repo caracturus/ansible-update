@@ -16,25 +16,58 @@
       apt:
         upgrade: dist
 
-    - name: Pull latest Portainer image
-      docker_image:
-        name: portainer/portainer-ce
-        source: pull
+    # ---- Portainer Smart Update Logic ----
 
-    - name: Recreate Portainer container
+    - name: Get running container image ID
+      command: docker inspect --format='{{.Image}}' {{ portainer_container_name }}
+      register: running_image_id
+      failed_when: false
+      changed_when: false
+
+    - name: Get latest image digest from Docker Hub
+      community.docker.docker_image_info:
+        name: "{{ portainer_image_name }}"
+        pull: true
+      register: latest_portainer_image_info
+
+    - name: Set latest image ID
+      set_fact:
+        latest_image_id: "{{ latest_portainer_image_info.images[0].Id }}"
+
+    - name: Compare running and latest image IDs
+      debug:
+        msg: "Portainer image is up to date."
+      when: running_image_id.stdout == latest_image_id
+
+    - name: Stop Portainer container (if outdated)
       docker_container:
-        name: portainer
-        image: portainer/portainer-ce
+        name: "{{ portainer_container_name }}"
+        state: stopped
+      when: running_image_id.stdout != latest_image_id
+
+    - name: Remove old Portainer container
+      docker_container:
+        name: "{{ portainer_container_name }}"
+        state: absent
+      when: running_image_id.stdout != latest_image_id
+
+    - name: Deploy new Portainer container
+      docker_container:
+        name: "{{ portainer_container_name }}"
+        image: "{{ portainer_image_name }}"
         state: started
-        restart: true
         recreate: true
+        restart: true
         ports:
-          - "9000:9000"
+          - "8000:8000"
+          - "9443:9443"
         volumes:
           - /var/run/docker.sock:/var/run/docker.sock
           - portainer_data:/data
-
+      when: running_image_id.stdout != latest_image_id
+      
     # NVIDIA Tasks — only for 'plex'
+    
     - name: Check if NVIDIA driver is working (nvidia-smi)
       command: nvidia-smi
       register: nvidia_smi_output
