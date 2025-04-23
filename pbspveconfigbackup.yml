@@ -1,0 +1,24 @@
+---
+- name: Backup Proxmox Backup Server Configuration
+  hosts: pbs
+  become: true
+  tasks:
+    - name: Create PBS backup archive
+      shell: >
+        tar czf /root/backup/pbs-config-backup-$(date +%F).tar.gz /etc/proxmox-backup
+
+    - name: Copy PBS backup to remote storage
+      shell: >
+        scp -r /root/backup root@192.168.5.249:/mnt/pve/Backups/configurations-backups/proxmox-bs
+
+- name: Backup Proxmox VE Configuration
+  hosts: pve
+  become: true
+  tasks:
+    - name: Create PVE config archive
+      shell: >
+        tar czf /root/backup/pve-config-backup-$(date +%F).tar.gz /etc/pve /etc/network/interfaces /etc/hosts /etc/resolv.conf /root
+
+    - name: Copy PVE backup to remote storage
+      shell: >
+        cp /root/backup/*.tar.gz /mnt/pve/Backups/configurations-backups/proxmox-ve
