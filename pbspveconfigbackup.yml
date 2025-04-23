@@ -9,7 +9,7 @@
 
     - name: Copy PBS backup to remote storage
       shell: >
-        scp -r /root/backup root@192.168.5.249:/mnt/pve/Backups/configurations-backups/proxmox-bs
+        scp /root/backup/*.tar.gz root@192.168.5.249:/mnt/pve/Backups/configurations-backups/proxmox-bs
 
 - name: Backup Proxmox VE Configuration
   hosts: pve
