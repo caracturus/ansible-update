@@ -1,1 +1,8 @@
-
+---
+- name: Backup Rclone Configuration Files Configuration
+  hosts: ubuntu
+  become: true
+  tasks:
+    - name: Synchronize the configuration files to Google Drive
+      shell: >
+        docker exec -it rclone sh -c "rclone sync /data googledrive:homelab"
