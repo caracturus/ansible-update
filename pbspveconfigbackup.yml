@@ -17,7 +17,7 @@
   tasks:
     - name: Create PVE config archive
       shell: >
-        tar czf /root/backup/pve-config-backup-$(date +%F).tar.gz /etc/pve /etc/network/interfaces /etc/hosts /etc/resolv.conf /root
+        tar czf /root/backup/pve-config-backup-$(date +%F).tar.gz /etc/pve /etc/network/interfaces /etc/hosts /etc/resolv.conf
 
     - name: Copy PVE backup to remote storage
       shell: >
