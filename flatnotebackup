@@ -1,0 +1,7 @@
+- name: Backup Flatnote
+  hosts: ubuntu
+  become: true
+  tasks:
+    - name: Create Flatnote backup archive and copy to Synology NAS
+      shell: >
+        tar czf /mnt/NetBackup/configurations-backups/flatnote/flatnote-backup-$(date +%F).tar.gz /mnt/obsidian/flatnote
