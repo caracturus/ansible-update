@@ -3,10 +3,10 @@
   become: true
   tasks:
     - name: Create Flatnote backup archive
-      ansible.builtin.command: >
+      shell: >
         tar czf /mnt/obsidian/flatnote/flatnote-backup-$(date +%F).tar.gz /mnt/obsidian/flatnote
    
     - name: Copy tarball to Google Drive
-      ansible.builtin.command: >
+      shell: >
         cp /mnt/obsidian/flatnote/flatnote-backup*.tar.gz /mnt/NetBackup/configurations-backups/flatnote
       
