@@ -2,13 +2,11 @@
   hosts: ubuntu
   become: true
   tasks:
-    - name: 
-      ansible.builtin.stat:
-        path: /mnt/Netbackup/configurations-backups/flatnote
-      register: flatnote_backup_dir
-  
-    - name: Create Flatnote backup archive and copy to Synology NAS
+    - name: Create Flatnote backup archive
       ansible.builtin.command: >
-        tar czf /mnt/obsidian/flatnote/flatnote-backup-$(date +%F).tar.gz /mnt/Netbackup/configurations-backups/flatnote
-      when: flatnote_backup_dir.stat.exists
+        tar czf /mnt/obsidian/flatnote/flatnote-backup-$(date +%F).tar.gz /mnt/obsidian/flatnote
+   
+    - name: Copy tarball to Google Drive
+      ansible.builtin.command: >
+        cp /mnt/obsidian/flatnote/flatnote-backup*.tar.gz /mnt/NetBackup/configurations-backups/flatnote
       
