@@ -22,3 +22,11 @@
     - name: Copy PVE backup to remote storage
       shell: >
         cp /root/backup/*.tar.gz /mnt/pve/Backups/configurations-backups/proxmox-ve
+
+- name: Backup Flatnote
+  hosts: ubuntu
+  become: true
+  tasks:
+    - name: Copy Flatnote to remote storage
+      shell: >
+        cp /mnt/obsidian/flatnote/* /mnt/NetBackup/configurations-backups/flatnote
