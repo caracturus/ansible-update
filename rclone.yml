@@ -5,4 +5,4 @@
   tasks:
     - name: Synchronize the configuration files to Google Drive
       shell: >
-        docker exec -it rclone sh -c "rclone sync /data googledrive:homelab"
+        docker exec -it rclone sh -c "rclone sync /data crypt:homelab"
