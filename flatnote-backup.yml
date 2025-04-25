@@ -5,6 +5,7 @@
     - name: Create Flatnote backup archive
       shell: >
         tar czf /mnt/obsidian/flatnote/flatnote-backup-$(date +%F).tar.gz /mnt/obsidian/flatnote
+      ignore_errors: yes
    
     - name: Copy tarball to Google Drive
       shell: >
